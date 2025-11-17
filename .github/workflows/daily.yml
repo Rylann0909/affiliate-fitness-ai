@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # this allows git commit & push to work
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -32,10 +34,3 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add site/products.json videos/
           git diff --quiet || git commit -m "Update products and videos"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push changes
-        run: git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
