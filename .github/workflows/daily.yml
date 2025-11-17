@@ -27,10 +27,16 @@ jobs:
         run: |
           python scripts/generate.py
 
-      - name: Commit generated products/videos
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add site/products.json videos/
-          git commit -m "Update products and videos" || echo "No changes"
-          git push
+       - name: Commit generated products/videos
+  run: |
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git add site/products.json videos/
+    git diff --quiet || git commit -m "Update products and videos"
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+- name: Push changes
+  run: git push
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
