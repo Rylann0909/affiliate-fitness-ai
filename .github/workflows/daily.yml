@@ -1,0 +1,36 @@
+name: Daily Product & Video Generator
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # runs every day at 6:00 UTC
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run generator script
+        run: |
+          python scripts/generate.py
+
+      - name: Commit generated products/videos
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add site/products.json videos/
+          git commit -m "Update products and videos" || echo "No changes"
+          git push
