@@ -5,7 +5,8 @@ import os
 import json
 import random
 from datetime import datetime
-
+os.makedirs("site", exist_ok=True)
+os.makedirs("videos", exist_ok=True)
 # --- CONFIG ---
 PRODUCTS_JSON = "site/products.json"
 VIDEOS_DIR = "videos"
