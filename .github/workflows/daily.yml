@@ -2,7 +2,7 @@ name: Daily Product & Video Generator
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 6 * * *' # daily 6:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # this allows git commit & push to work
+          persist-credentials: true  # IMPORTANT
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,12 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run generator
+      - name: Run generator script
         run: python scripts/generate.py
 
-      - name: Commit changes
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add site/products.json videos/
-          git diff --quiet || git commit -m "Update products and videos"
+          git commit -m "Update products and videos" || echo "No changes to commit"
