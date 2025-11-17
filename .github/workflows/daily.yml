@@ -2,7 +2,7 @@ name: Daily Product & Video Generator
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # runs every day at 6:00 UTC
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -23,20 +23,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run generator script
+      - name: Run generator
+        run: python scripts/generate.py
+
+      - name: Commit changes
         run: |
-          python scripts/generate.py
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add site/products.json videos/
+          git diff --quiet || git commit -m "Update products and videos"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-       - name: Commit generated products/videos
-  run: |
-    git config user.name "github-actions[bot]"
-    git config user.email "github-actions[bot]@users.noreply.github.com"
-    git add site/products.json videos/
-    git diff --quiet || git commit -m "Update products and videos"
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-- name: Push changes
-  run: git push
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push changes
+        run: git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
