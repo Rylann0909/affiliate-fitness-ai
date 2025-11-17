@@ -7,8 +7,8 @@ import random
 from datetime import datetime
 
 # --- CONFIG ---
-PRODUCTS_JSON = "../site/products.json"
-VIDEOS_DIR = "../videos"
+PRODUCTS_JSON = "site/products.json"
+VIDEOS_DIR = "videos"
 AFFILIATE_PROGRAMS = ["amazon", "clickbank", "impact"]
 
 # Example products (replace with real API or scraping logic)
